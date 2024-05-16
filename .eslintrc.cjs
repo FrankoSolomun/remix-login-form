@@ -80,5 +80,9 @@ module.exports = {
         node: true,
       },
     },
+    {
+      files: ['*.{js,jsx,ts,tsx,cjs}'],
+      extends: ['prettier'],
+    },
   ],
 };
