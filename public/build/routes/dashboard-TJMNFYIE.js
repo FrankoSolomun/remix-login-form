@@ -300,7 +300,7 @@ if (import.meta) {
     //@ts-expect-error
     "app/routes/dashboard.tsx"
   );
-  import.meta.hot.lastModified = "1715875060523.3477";
+  import.meta.hot.lastModified = "1715894206271.748";
 }
 var prisma = new import_client.PrismaClient();
 function Dashboard() {
@@ -309,6 +309,13 @@ function Dashboard() {
   const {
     user
   } = useLoaderData();
+  if (!user) {
+    return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { children: "Loading..." }, void 0, false, {
+      fileName: "app/routes/dashboard.tsx",
+      lineNumber: 111,
+      columnNumber: 12
+    }, this);
+  }
   const [editMode, setEditMode] = (0, import_react4.useState)(null);
   const [formData, setFormData] = (0, import_react4.useState)({
     ...user,
@@ -335,6 +342,8 @@ function Dashboard() {
     }
   };
   const saveChanges = () => {
+    if (!user)
+      return;
     const dataToSubmit = {
       ...formData,
       userId: user.id,
@@ -371,100 +380,100 @@ function Dashboard() {
     /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "bg-white w-[500px] h-[500px] py-6 px-8 rounded-[30px]", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(DashboardHeader_default, { profilePicture: user.profilePicture, userName: user.name }, void 0, false, {
         fileName: "app/routes/dashboard.tsx",
-        lineNumber: 171,
+        lineNumber: 175,
         columnNumber: 11
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "gap-2 flex flex-col", children: userDetails.map((detail) => /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: `px-6 py-[6px] rounded-3xl justify-between flex items-center h-[56px] ${editMode === detail.field ? "bg-gray-100" : "hover:bg-gray-100"}`, children: editMode === detail.field ? /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(import_jsx_dev_runtime4.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "flex justify-between w-full", children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("input", { type: detail.field === "birthdate" ? "date" : "text", name: detail.field, value: detail.field === "birthdate" ? formData[detail.field].toISOString().substring(0, 10) : formData[detail.field], onChange: handleChange, className: "bg-transparent focus:outline-none w-full" }, void 0, false, {
           fileName: "app/routes/dashboard.tsx",
-          lineNumber: 176,
+          lineNumber: 180,
           columnNumber: 23
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("button", { className: "bg-blue-500 flex justify-center items-center p-2 rounded-full", onClick: saveChanges, children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(UploadIcon, { className: "w-5 h-5 stroke-white" }, void 0, false, {
           fileName: "app/routes/dashboard.tsx",
-          lineNumber: 178,
+          lineNumber: 182,
           columnNumber: 25
         }, this) }, void 0, false, {
           fileName: "app/routes/dashboard.tsx",
-          lineNumber: 177,
+          lineNumber: 181,
           columnNumber: 23
         }, this)
       ] }, void 0, true, {
         fileName: "app/routes/dashboard.tsx",
-        lineNumber: 175,
+        lineNumber: 179,
         columnNumber: 21
       }, this) }, void 0, false, {
         fileName: "app/routes/dashboard.tsx",
-        lineNumber: 174,
+        lineNumber: 178,
         columnNumber: 46
       }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(import_jsx_dev_runtime4.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "group w-full flex justify-between items-center", children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("p", { className: "text-gray-400 leading-[20px]", children: detail.label }, void 0, false, {
             fileName: "app/routes/dashboard.tsx",
-            lineNumber: 184,
+            lineNumber: 188,
             columnNumber: 25
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("p", { children: detail.value }, void 0, false, {
             fileName: "app/routes/dashboard.tsx",
-            lineNumber: 187,
+            lineNumber: 191,
             columnNumber: 25
           }, this)
         ] }, void 0, true, {
           fileName: "app/routes/dashboard.tsx",
-          lineNumber: 183,
+          lineNumber: 187,
           columnNumber: 23
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("button", { onClick: () => handleEdit(detail.field), className: "flex justify-center items-center p-2 rounded-full hover:bg-gray-300", children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(PencilIcon, { className: "w-4 h-4 hidden group-hover:block" }, void 0, false, {
           fileName: "app/routes/dashboard.tsx",
-          lineNumber: 190,
+          lineNumber: 194,
           columnNumber: 25
         }, this) }, void 0, false, {
           fileName: "app/routes/dashboard.tsx",
-          lineNumber: 189,
+          lineNumber: 193,
           columnNumber: 23
         }, this)
       ] }, void 0, true, {
         fileName: "app/routes/dashboard.tsx",
-        lineNumber: 182,
+        lineNumber: 186,
         columnNumber: 21
       }, this) }, void 0, false, {
         fileName: "app/routes/dashboard.tsx",
-        lineNumber: 181,
+        lineNumber: 185,
         columnNumber: 25
       }, this) }, detail.field, false, {
         fileName: "app/routes/dashboard.tsx",
-        lineNumber: 173,
+        lineNumber: 177,
         columnNumber: 40
       }, this)) }, void 0, false, {
         fileName: "app/routes/dashboard.tsx",
-        lineNumber: 172,
+        lineNumber: 176,
         columnNumber: 11
       }, this)
     ] }, void 0, true, {
       fileName: "app/routes/dashboard.tsx",
-      lineNumber: 170,
+      lineNumber: 174,
       columnNumber: 9
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("a", { href: "/change-password", className: "mt-5 bg-blue-500 text-white px-2 py-3 rounded-[30px] w-full max-w-[500px] flex justify-center items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("p", { children: "Change password" }, void 0, false, {
       fileName: "app/routes/dashboard.tsx",
-      lineNumber: 198,
+      lineNumber: 202,
       columnNumber: 11
     }, this) }, void 0, false, {
       fileName: "app/routes/dashboard.tsx",
-      lineNumber: 197,
+      lineNumber: 201,
       columnNumber: 9
     }, this)
   ] }, void 0, true, {
     fileName: "app/routes/dashboard.tsx",
-    lineNumber: 169,
+    lineNumber: 173,
     columnNumber: 7
   }, this) }, void 0, false, {
     fileName: "app/routes/dashboard.tsx",
-    lineNumber: 168,
+    lineNumber: 172,
     columnNumber: 10
   }, this);
 }
-_s2(Dashboard, "WoVkaU1RWHrrqz+fKT/f1yeLWQ4=", false, function() {
+_s2(Dashboard, "wWIGvovlFUgfgeLkkpwp6OfjPWE=", false, function() {
   return [useFetcher, useLoaderData];
 });
 _c6 = Dashboard;
@@ -475,4 +484,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   Dashboard as default
 };
-//# sourceMappingURL=/build/routes/dashboard-TVXRBW4O.js.map
+//# sourceMappingURL=/build/routes/dashboard-TJMNFYIE.js.map
