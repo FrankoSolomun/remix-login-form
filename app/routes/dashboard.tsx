@@ -11,16 +11,16 @@ import DashboardHeader from "~/components/DashboardHeader";
 const prisma = new PrismaClient();
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await authenticator.isAuthenticated(request, {
+  const userId = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
 
-  if (!user) {
+  if (!userId) {
     throw new Response("Not Found", { status: 404 });
   }
 
   const userData = await prisma.user.findUnique({
-    where: { id: user },
+    where: { id: userId },
   });
 
   if (!userData) {
@@ -80,11 +80,15 @@ export default function Dashboard() {
   const fetcher = useFetcher();
   const { user } = useLoaderData<LoaderData>();
 
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   const [editMode, setEditMode] = useState<keyof User | null>(null);
   const [formData, setFormData] = useState<User>({
     ...user,
     birthdate: new Date(user.birthdate),
-  });
+  } as User);
 
   const handleEdit = (field: keyof User) => {
     setEditMode(field);
@@ -106,6 +110,7 @@ export default function Dashboard() {
   };
 
   const saveChanges = () => {
+    if (!user) return; // Early return if user is null
     const dataToSubmit = {
       ...formData,
       userId: user.id,
@@ -143,7 +148,11 @@ export default function Dashboard() {
             {userDetails.map((detail) => (
               <div
                 key={detail.field}
-                className={`px-6 py-[6px] rounded-3xl justify-between flex items-center h-[56px] ${editMode === detail.field ? "bg-gray-100" : "hover:bg-gray-100"}`}
+                className={`px-6 py-[6px] rounded-3xl justify-between flex items-center h-[56px] ${
+                  editMode === detail.field
+                    ? "bg-gray-100"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 {editMode === detail.field ? (
                   <>

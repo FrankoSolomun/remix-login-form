@@ -572,13 +572,13 @@ video {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity));
 }
-.text-white {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
 .text-red-500 {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 .hover\:bg-gray-100:hover {
   --tw-bg-opacity: 1;
@@ -595,4 +595,4 @@ video {
 .group:hover .group-hover\:block {
   display: block;
 }
-/*# sourceMappingURL=/build/_assets/tailwind-RKYJW23D.css.map */
+/*# sourceMappingURL=/build/_assets/tailwind-RFALNCAS.css.map */
