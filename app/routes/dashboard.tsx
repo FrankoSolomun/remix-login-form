@@ -27,12 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response("User Not Found", { status: 404 });
   }
 
-  const userWithFormattedDate = {
-    ...userData,
-    birthdate: userData.birthdate.toISOString().substring(0, 10),
-  };
-
-  return json({ user: userWithFormattedDate });
+  return json({ user: userData });
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -45,8 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
     const name = form.get("name") as string;
     const surname = form.get("surname") as string;
     const address = form.get("address") as string;
-    const birthdateStr = form.get("birthdate") as string;
-    const birthdate = new Date(birthdateStr);
+    const birthdate = form.get("birthdate") as string;
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
@@ -87,7 +81,6 @@ export default function Dashboard() {
   const [editMode, setEditMode] = useState<keyof User | null>(null);
   const [formData, setFormData] = useState<User>({
     ...user,
-    birthdate: new Date(user.birthdate),
   } as User);
 
   const handleEdit = (field: keyof User) => {
@@ -96,17 +89,10 @@ export default function Dashboard() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    if (name === "birthdate") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: new Date(value),
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const saveChanges = () => {
@@ -114,7 +100,6 @@ export default function Dashboard() {
     const dataToSubmit = {
       ...formData,
       userId: user.id,
-      birthdate: formData.birthdate.toISOString(),
       action: "updateUser",
     };
     fetcher.submit(dataToSubmit, { method: "post" });
@@ -126,14 +111,7 @@ export default function Dashboard() {
     { label: "Name", value: user.name, field: "name" },
     { label: "Surname", value: user.surname, field: "surname" },
     { label: "Address", value: user.address, field: "address" },
-    {
-      label: "Date of Birth",
-      value: new Date(formData.birthdate)
-        .toLocaleDateString("en-GB")
-        .split("/")
-        .join("."),
-      field: "birthdate",
-    },
+    { label: "Date of Birth", value: formData.birthdate, field: "birthdate" },
   ];
 
   return (
@@ -158,15 +136,9 @@ export default function Dashboard() {
                   <>
                     <div className="flex justify-between w-full">
                       <input
-                        type={detail.field === "birthdate" ? "date" : "text"}
+                        type="text" // Always treat birthdate as text
                         name={detail.field}
-                        value={
-                          detail.field === "birthdate"
-                            ? (formData[detail.field] as Date)
-                                .toISOString()
-                                .substring(0, 10)
-                            : formData[detail.field]
-                        }
+                        value={formData[detail.field]}
                         onChange={handleChange}
                         className="bg-transparent focus:outline-none w-full"
                       />

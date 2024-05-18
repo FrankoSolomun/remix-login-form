@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import {
-  ActionFunction,
-  LoaderFunction,
-  json,
-  redirect,
-} from "@remix-run/node";
+import { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { useActionData, Link } from "@remix-run/react";
 import { Layout } from "app/components/layout";
 import { Textfield } from "~/components/textfield";
 import { authenticator } from "./utils/auth.server";
 import { SocialsProvider } from "remix-auth-socials";
+import { GoogleIcon } from "~/icons/icons";
 
 export interface ActionData {
   fields?: {
     email?: string;
     password?: string;
+    name?: string;
+    surname?: string;
+    birthdate?: string;
+    address?: string;
   };
   error?: string;
   details?: string;
@@ -76,16 +76,22 @@ export default function Login() {
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white p-2 rounded-lg"
+            className="bg-blue-700 text-white py-3 w-[320px] rounded-full mt-2"
           >
             Login
           </button>
-          <Link to="/signup" className="text-blue-500">
-            {"Don't have an account? Register here"}
-          </Link>
-        </form>
-        <form action={`/auth/${SocialsProvider.GOOGLE}`} method="post">
-          <button>Login with Google</button>
+          <form action={`/auth/${SocialsProvider.GOOGLE}`} method="post">
+            <button className="bg-white py-3 w-[320px] rounded-full flex justify-center items-center">
+              <GoogleIcon className="w-6 h-6 mr-2" />
+              Login with Google
+            </button>
+          </form>
+          <div>
+            {"Already have an account?"}{" "}
+            <Link to="/signup" className="text-blue-700">
+              Sign up here
+            </Link>
+          </div>
         </form>
       </div>
     </Layout>

@@ -20,28 +20,8 @@ interface ActionData {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
-  });
-
-  if (!user) {
-    throw new Response("Not Found", { status: 404 });
-  }
-
-  const userData = await prisma.user.findUnique({
-    where: { id: user },
-  });
-
-  if (!userData) {
-    throw new Response("User Not Found", { status: 404 });
-  }
-
-  const userWithFormattedDate = {
-    ...userData,
-    birthdate: userData.birthdate.toISOString().substring(0, 10),
-  };
-
-  return json({ user: userWithFormattedDate });
+  const user = await authenticator.isAuthenticated(request);
+  return json({ user, isAuthenticated: Boolean(user) });
 };
 
 export const action: ActionFunction = async ({ request }) => {

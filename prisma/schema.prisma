@@ -16,7 +16,7 @@ model user {
   name      String
   surname   String
   address   String
-  birthdate DateTime
+  birthdate String
   profilePicture String?
 
 }

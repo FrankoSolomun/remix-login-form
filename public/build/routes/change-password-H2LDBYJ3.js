@@ -1866,7 +1866,7 @@ if (import.meta) {
     //@ts-expect-error
     "app/routes/change-password.tsx"
   );
-  import.meta.hot.lastModified = "1715589423291.1858";
+  import.meta.hot.lastModified = "1716067499805.3523";
 }
 var prisma = new import_client.PrismaClient();
 function ChangePassword() {
@@ -1878,69 +1878,69 @@ function ChangePassword() {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Layout, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { className: "flex flex-col justify-center items-center h-screen", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h1", { className: "mb-10 text-bold text-[30px]", children: "Change Password" }, void 0, false, {
       fileName: "app/routes/change-password.tsx",
-      lineNumber: 120,
+      lineNumber: 100,
       columnNumber: 9
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Form, { method: "post", className: "flex flex-col items-center gap-3", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("input", { type: "hidden", name: "userId", value: user.id }, void 0, false, {
         fileName: "app/routes/change-password.tsx",
-        lineNumber: 122,
+        lineNumber: 102,
         columnNumber: 11
       }, this),
       actionData?.error && /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", { children: actionData.error }, void 0, false, {
         fileName: "app/routes/change-password.tsx",
-        lineNumber: 123,
+        lineNumber: 103,
         columnNumber: 33
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { className: "flex flex-col", children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("label", { htmlFor: "oldPassword", className: "text-sm font-semibold text-gray-700", children: "Current Password:" }, void 0, false, {
           fileName: "app/routes/change-password.tsx",
-          lineNumber: 125,
+          lineNumber: 105,
           columnNumber: 13
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("input", { id: "oldPassword", name: "oldPassword", type: "password", className: "p-2 mt-1 border border-gray-300 rounded-lg", required: true }, void 0, false, {
           fileName: "app/routes/change-password.tsx",
-          lineNumber: 128,
+          lineNumber: 108,
           columnNumber: 13
         }, this)
       ] }, void 0, true, {
         fileName: "app/routes/change-password.tsx",
-        lineNumber: 124,
+        lineNumber: 104,
         columnNumber: 11
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { className: "flex flex-col", children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("label", { htmlFor: "newPassword", className: "text-sm font-semibold text-gray-700", children: "New Password:" }, void 0, false, {
           fileName: "app/routes/change-password.tsx",
-          lineNumber: 131,
+          lineNumber: 111,
           columnNumber: 13
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("input", { id: "newPassword", name: "newPassword", type: "password", className: "p-2 mt-1 border border-gray-300 rounded-lg", required: true }, void 0, false, {
           fileName: "app/routes/change-password.tsx",
-          lineNumber: 134,
+          lineNumber: 114,
           columnNumber: 13
         }, this)
       ] }, void 0, true, {
         fileName: "app/routes/change-password.tsx",
-        lineNumber: 130,
+        lineNumber: 110,
         columnNumber: 11
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("button", { type: "submit", className: "bg-blue-500 text-white py-2 rounded-full px-5 mt-4", children: "Update Password" }, void 0, false, {
         fileName: "app/routes/change-password.tsx",
-        lineNumber: 136,
+        lineNumber: 116,
         columnNumber: 11
       }, this)
     ] }, void 0, true, {
       fileName: "app/routes/change-password.tsx",
-      lineNumber: 121,
+      lineNumber: 101,
       columnNumber: 9
     }, this)
   ] }, void 0, true, {
     fileName: "app/routes/change-password.tsx",
-    lineNumber: 119,
+    lineNumber: 99,
     columnNumber: 7
   }, this) }, void 0, false, {
     fileName: "app/routes/change-password.tsx",
-    lineNumber: 118,
+    lineNumber: 98,
     columnNumber: 10
   }, this);
 }
@@ -1964,4 +1964,4 @@ bcryptjs/dist/bcrypt.js:
    * see: https://github.com/dcodeIO/bcrypt.js for details
    *)
 */
-//# sourceMappingURL=/build/routes/change-password-QG3V4TYW.js.map
+//# sourceMappingURL=/build/routes/change-password-H2LDBYJ3.js.map
