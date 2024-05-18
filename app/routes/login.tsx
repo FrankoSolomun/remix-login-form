@@ -51,14 +51,14 @@ export default function Login() {
   return (
     <Layout>
       <div className="flex flex-col justify-center items-center h-screen">
+        <h2 className="text-[30px]">Login</h2>
+        {actionData?.error && (
+          <p className="text-red-500">
+            {actionData.error} <br />
+            {actionData.details}
+          </p>
+        )}
         <form method="POST" className="flex flex-col items-center gap-3">
-          <h2 className="text-[30px]">Login</h2>
-          {actionData?.error && (
-            <p className="text-red-500">
-              {actionData.error} <br />
-              {actionData.details}
-            </p>
-          )}
           <Textfield
             htmlFor="email"
             name="email"
@@ -80,19 +80,23 @@ export default function Login() {
           >
             Login
           </button>
-          <form action={`/auth/${SocialsProvider.GOOGLE}`} method="post">
-            <button className="bg-white py-3 w-[320px] rounded-full flex justify-center items-center">
-              <GoogleIcon className="w-6 h-6 mr-2" />
-              Login with Google
-            </button>
-          </form>
-          <div>
-            {"Already have an account?"}{" "}
-            <Link to="/signup" className="text-blue-700">
-              Sign up here
-            </Link>
-          </div>
         </form>
+        <form
+          action={`/auth/${SocialsProvider.GOOGLE}`}
+          method="post"
+          className="mt-2"
+        >
+          <button className="bg-white py-3 w-[320px] rounded-full flex justify-center items-center">
+            <GoogleIcon className="w-6 h-6 mr-2" />
+            Login with Google
+          </button>
+        </form>
+        <div className="mt-2">
+          {"Don't have an account?"}{" "}
+          <Link to="/signup" className="text-blue-700">
+            Sign up here
+          </Link>
+        </div>
       </div>
     </Layout>
   );

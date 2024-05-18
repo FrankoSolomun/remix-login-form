@@ -11,13 +11,18 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.4.0",
     "@prisma/client": "^5.13.0",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-slot": "^1.0.2",
     "@remix-run/css-bundle": "^2.9.1",
     "@remix-run/node": "^2.9.2",
     "@remix-run/react": "^2.9.1",
     "@remix-run/serve": "^2.9.1",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "class-validator": "^0.14.1",
+    "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "flatpickr": "^4.6.13",
     "gapi-script": "^1.2.0",
@@ -25,11 +30,14 @@
     "mongodb": "^6.6.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.51.4",
     "react-input-mask": "^2.0.4",
     "remix-auth": "^3.6.0",
     "remix-auth-form": "^1.5.0",
     "remix-auth-google": "^2.0.0",
-    "remix-auth-socials": "^2.0.6"
+    "remix-auth-socials": "^2.0.6",
+    "sass": "^1.77.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.9.1",

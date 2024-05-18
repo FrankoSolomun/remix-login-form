@@ -174,7 +174,7 @@ export default function Dashboard() {
         </div>
         <a
           href="/change-password"
-          className="mt-5 bg-blue-500 text-white px-2 py-3 rounded-[30px] w-full max-w-[500px] flex justify-center items-center"
+          className="mt-5 bg-blue-700 text-white px-2 py-3 rounded-[30px] w-full max-w-[500px] flex justify-center items-center"
         >
           <p>Change password</p>
         </a>
