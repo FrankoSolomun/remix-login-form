@@ -98,7 +98,7 @@ const googleStrategy = new GoogleStrategy(
           surname: profile.name.familyName,
           password: bcrypt.hashSync("defaultPassword", 10),
           address: "defaultAddress",
-          birthdate: new Date("1990-01-01"),
+          birthdate: "defaultBirthdate",
         },
       });
     } else {

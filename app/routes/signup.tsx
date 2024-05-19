@@ -26,24 +26,34 @@ export const action: ActionFunction = async ({ request }) => {
   const password = form.get("password");
   const name = form.get("name");
   const surname = form.get("surname");
-  const birthdateStr = form.get("birthdate") as string | null; // Cast as string or null
+  const birthdate = form.get("birthdate") as string; // Cast to string
   const address = form.get("address");
 
+  // Validate all fields for proper types and presence
   if (
     typeof email !== "string" ||
+    email.trim() === "" ||
     typeof password !== "string" ||
+    password.trim() === "" ||
     typeof name !== "string" ||
+    name.trim() === "" ||
     typeof surname !== "string" ||
-    !birthdateStr ||
-    typeof address !== "string"
+    surname.trim() === "" ||
+    typeof birthdate !== "string" ||
+    birthdate.trim() === "" ||
+    typeof address !== "string" ||
+    address.trim() === ""
   ) {
-    return json({ error: "Invalid Form Data" }, { status: 400 });
+    return json(
+      { error: "All fields are required and must be valid." },
+      { status: 400 },
+    );
   }
 
-  const birthdate = new Date(birthdateStr); // Convert string to Date object
-  if (isNaN(birthdate.getTime())) {
-    // Check if the date is valid
-    return json({ error: "Invalid birthdate" }, { status: 400 });
+  // Validate birthdate format (DD.MM.YYYY)
+  const datePattern = /^\d{2}\.\d{2}\.\d{4}$/;
+  if (!datePattern.test(birthdate)) {
+    return json({ error: "Invalid birthdate format" }, { status: 400 });
   }
 
   // Attempt to create the user
@@ -56,24 +66,19 @@ export const action: ActionFunction = async ({ request }) => {
     address,
   });
 
-  // Check if the user creation was successful
   if ("error" in creationResult) {
-    // Return the error if user creation failed
     return json({ error: creationResult.error }, { status: 400 });
   }
 
-  // If user creation was successful, retrieve or create a new session
+  // Session management after successful registration
   const session = await sessionStorage.getSession(
     request.headers.get("Cookie"),
   );
 
-  // Set the user ID in the session
-  session.set("userId", creationResult.user.id); // Store user identifier in session
+  session.set("userId", creationResult.user.id); // Store user ID in session
 
-  // Commit the session and get the Set-Cookie header
   const cookie = await sessionStorage.commitSession(session);
 
-  // Return a redirect response with the Set-Cookie header
   return redirect("/login", {
     headers: {
       "Set-Cookie": cookie,
@@ -98,6 +103,39 @@ export default function Signup() {
     field: string,
   ) => {
     setFormData((form) => ({ ...form, [field]: event.target.value }));
+  };
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let { value } = event.target;
+    const inputType = (event.nativeEvent as InputEvent).inputType;
+
+    // Normalize the input to only contain numbers and replace any misplaced dots
+    value = value.replace(/[^0-9.]/g, "").replace(/\.+/g, "");
+
+    // Format the string with dots in the correct places
+    if (value.length > 2 && value[2] !== ".") {
+      value = value.slice(0, 2) + "." + value.slice(2);
+    }
+    if (value.length > 5 && value[5] !== ".") {
+      value = value.slice(0, 5) + "." + value.slice(5);
+    }
+
+    // Cut the value to the maximum length of 10 characters (DD.MM.YYYY)
+    if (value.length > 10) {
+      value = value.slice(0, 10);
+    }
+
+    // Handle deletion specifically, maintaining the position of dots
+    if (inputType === "deleteContentBackward") {
+      // Remove any trailing dots left over after deletion
+      value = value.replace(/(\.$)|(\.\.)/g, "");
+    }
+
+    // Update form state
+    setFormData((prev) => ({
+      ...prev,
+      [event.target.name]: value,
+    }));
   };
 
   return (
@@ -137,14 +175,19 @@ export default function Signup() {
             value={formData.surname}
             onChange={(e) => handleInputChange(e, "surname")}
           />
+
           <Textfield
             htmlFor="birthdate"
             name="birthdate"
-            label="Date of birth"
-            type="date"
+            label="Date of Birth"
+            type="text"
             value={formData.birthdate}
-            onChange={(e) => handleInputChange(e, "birthdate")}
+            onChange={handleDateChange}
+            pattern="\d{2}\.\d{2}\.\d{4}"
+            placeholder="Date of birth" // Initial placeholder
+            focusPlaceholder="DD.MM.YYYY" // Placeholder on focus
           />
+
           <Textfield
             htmlFor="address"
             name="address"
@@ -157,13 +200,16 @@ export default function Signup() {
             type="submit"
             name="_action"
             value="register"
-            className="bg-blue-500 text-white p-2 rounded-lg"
+            className="bg-blue-700 text-white py-3 w-[320px] rounded-full mt-3"
           >
             Signup
           </button>
-          <Link to="/login" className="text-blue-500">
-            {"Already have an account? Login here"}
-          </Link>
+          <div>
+            {"Already have an account?"}{" "}
+            <Link to="/login" className="text-blue-700">
+              Login here
+            </Link>
+          </div>
         </form>
       </div>
     </Layout>

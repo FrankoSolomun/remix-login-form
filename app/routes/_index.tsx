@@ -10,12 +10,12 @@ export interface User {
   name: string;
   surname: string;
   address: string;
-  birthdate: Date;
+  birthdate: string;
   profilePicture: string;
 }
 
 export interface LoaderData {
-  user: User | null;
+  user: User;
   isAuthenticated: boolean;
 }
 
