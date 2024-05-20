@@ -62,11 +62,7 @@ export function Textfield({
         onBlur={handleBlur}
         pattern={pattern}
         placeholder={currentPlaceholder}
-        className={`px-5 py-3 mt-1 border rounded-full w-[320px] ${
-          isValid
-            ? "border-gray-300 active:border-blue-700"
-            : "border-red-500 text-red-500"
-        }`}
+        className="px-5 py-3 mt-1 border rounded-full w-[320px]"
         required
       />
     </div>

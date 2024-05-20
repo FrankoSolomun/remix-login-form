@@ -7,11 +7,11 @@ import {
 import { sessionStorage } from "./utils/session.server";
 import { useActionData, Link } from "@remix-run/react";
 import { Layout } from "app/components/layout";
-import { Textfield } from "~/components/textfield";
-import { ActionData } from "./login";
 import React, { useState } from "react";
 import { createUser } from "./utils/user.server";
 import { authenticator } from "./utils/auth.server";
+import RegisterForm from "~/components/RegisterForm";
+import { ActionData } from "./login";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await authenticator.isAuthenticated(request, {
@@ -141,76 +141,17 @@ export default function Signup() {
   return (
     <Layout>
       <div className="flex flex-col justify-center items-center h-screen">
-        <form method="POST" className="flex flex-col items-center gap-3">
-          {actionData?.error && <p className="error">{actionData.error}</p>}
-          <Textfield
-            htmlFor="email"
-            name="email"
-            label="Email"
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange(e, "email")}
-          />
-          <Textfield
-            htmlFor="password"
-            name="password"
-            label="Password"
-            type="password"
-            value={formData.password}
-            onChange={(e) => handleInputChange(e, "password")}
-          />
-          <Textfield
-            htmlFor="name"
-            name="name"
-            label="Name"
-            type="text"
-            value={formData.name}
-            onChange={(e) => handleInputChange(e, "name")}
-          />
-          <Textfield
-            htmlFor="surname"
-            name="surname"
-            label="Surname"
-            type="text"
-            value={formData.surname}
-            onChange={(e) => handleInputChange(e, "surname")}
-          />
-
-          <Textfield
-            htmlFor="birthdate"
-            name="birthdate"
-            label="Date of Birth"
-            type="text"
-            value={formData.birthdate}
-            onChange={handleDateChange}
-            pattern="\d{2}\.\d{2}\.\d{4}"
-            placeholder="Date of birth" // Initial placeholder
-            focusPlaceholder="DD.MM.YYYY" // Placeholder on focus
-          />
-
-          <Textfield
-            htmlFor="address"
-            name="address"
-            label="Address"
-            type="text"
-            value={formData.address}
-            onChange={(e) => handleInputChange(e, "address")}
-          />
-          <button
-            type="submit"
-            name="_action"
-            value="register"
-            className="bg-blue-700 text-white py-3 w-[320px] rounded-full mt-3"
-          >
-            Signup
-          </button>
-          <div>
-            {"Already have an account?"}{" "}
-            <Link to="/login" className="text-blue-700">
-              Login here
-            </Link>
-          </div>
-        </form>
+        <RegisterForm
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleDateChange={handleDateChange}
+        />
+        <div>
+          {"Already have an account?"}{" "}
+          <Link to="/login" className="text-blue-700">
+            Login here
+          </Link>
+        </div>
       </div>
     </Layout>
   );
