@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useActionData } from "@remix-run/react";
+import debounce from "lodash.debounce";
 
 interface FormData {
   email: string;
   password: string;
+  confirmPassword: string;
   name: string;
   surname: string;
   birthdate: string;
@@ -45,6 +47,7 @@ export default function RegisterForm({
   const [errors, setErrors] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
     name: "",
     surname: "",
     birthdate: "",
@@ -57,47 +60,104 @@ export default function RegisterForm({
     return re.test(String(email).toLowerCase());
   };
 
-  const validateInputs = () => {
-    const newErrors = {
-      email: "",
-      password: "",
-      name: "",
-      surname: "",
-      birthdate: "",
-      address: "",
+  const validateField = (field: keyof FormData, value: string) => {
+    const newErrors = { ...errors };
+
+    const calculateAge = (birthdate: string) => {
+      const [day, month, year] = birthdate.split(".").map(Number);
+      const today = new Date();
+      const birthDate = new Date(year, month - 1, day);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
     };
 
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!isValidEmail(formData.email)) {
-      newErrors.email = "Provide a valid email address";
+    if (field === "email") {
+      if (!value) {
+        newErrors.email = "Email is required";
+      } else if (!isValidEmail(value)) {
+        newErrors.email = "Provide a valid email address";
+      } else {
+        newErrors.email = "";
+      }
     }
 
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+    if (field === "password") {
+      if (!value) {
+        newErrors.password = "Password is required";
+      } else if (value.length < 8) {
+        newErrors.password = "Password must be at least 8 characters";
+      } else {
+        newErrors.password = "";
+      }
     }
 
-    if (!formData.name) {
-      newErrors.name = "Name is required";
+    if (field === "confirmPassword") {
+      if (!value) {
+        newErrors.confirmPassword = "Please confirm your password";
+      } else if (value !== formData.password) {
+        newErrors.confirmPassword = "Passwords do not match";
+      } else {
+        newErrors.confirmPassword = "";
+      }
     }
 
-    if (!formData.surname) {
-      newErrors.surname = "Surname is required";
+    if (field === "name") {
+      if (!value) {
+        newErrors.name = "Name is required";
+      } else if (value.length < 2) {
+        newErrors.name = "Name must be at least 2 characters";
+      } else {
+        newErrors.name = "";
+      }
     }
 
-    if (!formData.birthdate) {
-      newErrors.birthdate = "Date of birth is required";
+    if (field === "surname") {
+      if (!value) {
+        newErrors.surname = "Surname is required";
+      } else if (value.length < 2) {
+        newErrors.surname = "Surname must be at least 2 characters";
+      } else {
+        newErrors.surname = "";
+      }
     }
 
-    if (!formData.address) {
-      newErrors.address = "Address is required";
+    if (field === "birthdate") {
+      if (!value) {
+        newErrors.birthdate = "Date of birth is required";
+      } else if (!/^\d{2}\.\d{2}\.\d{4}$/.test(value)) {
+        newErrors.birthdate = "Invalid date format";
+      } else if (calculateAge(value) < 12) {
+        newErrors.birthdate = "User must be at least 12 years old";
+      } else {
+        newErrors.birthdate = "";
+      }
+    }
+
+    if (field === "address") {
+      if (!value) {
+        newErrors.address = "Address is required";
+      } else {
+        newErrors.address = "";
+      }
     }
 
     setErrors(newErrors);
+  };
 
-    return Object.values(newErrors).every((error) => error === "");
+  const debouncedValidateField = useCallback(debounce(validateField, 500), [
+    formData,
+  ]);
+
+  const handleLiveValidation = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string,
+  ) => {
+    handleInputChange(e, field);
+    debouncedValidateField(field as keyof FormData, e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -116,6 +176,76 @@ export default function RegisterForm({
     }
   };
 
+  const validateInputs = () => {
+    const newErrors = {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      name: "",
+      surname: "",
+      birthdate: "",
+      address: "",
+    };
+
+    const calculateAge = (birthdate: string) => {
+      const [day, month, year] = birthdate.split(".").map(Number);
+      const today = new Date();
+      const birthDate = new Date(year, month - 1, day);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
+    };
+
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+    } else if (!isValidEmail(formData.email)) {
+      newErrors.email = "Provide a valid email address";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.confirmPassword !== formData.password) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    if (!formData.name) {
+      newErrors.name = "Name is required";
+    } else if (formData.name.length < 2) {
+      newErrors.name = "Name must be at least 2 characters";
+    }
+
+    if (!formData.surname) {
+      newErrors.surname = "Surname is required";
+    } else if (formData.surname.length < 2) {
+      newErrors.surname = "Surname must be at least 2 characters";
+    }
+
+    if (!formData.birthdate) {
+      newErrors.birthdate = "Date of birth is required";
+    } else if (!/^\d{2}\.\d{2}\.\d{4}$/.test(formData.birthdate)) {
+      newErrors.birthdate = "Invalid date format";
+    } else if (calculateAge(formData.birthdate) < 12) {
+      newErrors.birthdate = "User must be at least 12 years old";
+    }
+
+    if (!formData.address) {
+      newErrors.address = "Address is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.values(newErrors).every((error) => error === "");
+  };
+
   return (
     <form
       method="POST"
@@ -129,7 +259,7 @@ export default function RegisterForm({
           name="email"
           type="email"
           value={formData.email}
-          onChange={(e) => handleInputChange(e, "email")}
+          onChange={(e) => handleLiveValidation(e, "email")}
           placeholder="Email"
           className={`px-5 py-3 mt-1 border rounded-full ${getBorderClass("email")}`}
         />
@@ -141,7 +271,7 @@ export default function RegisterForm({
           name="password"
           type="password"
           value={formData.password}
-          onChange={(e) => handleInputChange(e, "password")}
+          onChange={(e) => handleLiveValidation(e, "password")}
           placeholder="Password"
           className={`px-5 py-3 mt-1 border rounded-full ${getBorderClass("password")}`}
         />
@@ -149,11 +279,25 @@ export default function RegisterForm({
       </div>
       <div className="flex flex-col w-[320px]">
         <input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          value={formData.confirmPassword}
+          onChange={(e) => handleLiveValidation(e, "confirmPassword")}
+          placeholder="Confirm Password"
+          className={`px-5 py-3 mt-1 border rounded-full ${getBorderClass("confirmPassword")}`}
+        />
+        {errors.confirmPassword && (
+          <p className="text-red-500">{errors.confirmPassword}</p>
+        )}
+      </div>
+      <div className="flex flex-col w-[320px]">
+        <input
           id="name"
           name="name"
           type="text"
           value={formData.name}
-          onChange={(e) => handleInputChange(e, "name")}
+          onChange={(e) => handleLiveValidation(e, "name")}
           placeholder="Name"
           className={`px-5 py-3 mt-1 border rounded-full ${getBorderClass("name")}`}
         />
@@ -165,13 +309,13 @@ export default function RegisterForm({
           name="surname"
           type="text"
           value={formData.surname}
-          onChange={(e) => handleInputChange(e, "surname")}
+          onChange={(e) => handleLiveValidation(e, "surname")}
           placeholder="Surname"
           className={`px-5 py-3 mt-1 border rounded-full ${getBorderClass("surname")}`}
         />
         {errors.surname && <p className="text-red-500">{errors.surname}</p>}
       </div>
-      <div className="flex flex-col w-[320px]">
+      <div className="flex flex-col w-[320px] relative">
         <input
           id="birthdate"
           name="birthdate"
@@ -182,7 +326,7 @@ export default function RegisterForm({
           onBlur={handleBirthdateBlur}
           pattern="\d{2}\.\d{2}\.\d{4}"
           placeholder={birthdatePlaceholder}
-          className={`px-5 py-3 mt-1 border rounded-full ${getBorderClass("birthdate")}`}
+          className={`px-5 py-3 mt-1 border rounded-full ${getBorderClass("birthdate")} placeholder-gray-400`}
         />
         {errors.birthdate && <p className="text-red-500">{errors.birthdate}</p>}
       </div>
@@ -192,7 +336,7 @@ export default function RegisterForm({
           name="address"
           type="text"
           value={formData.address}
-          onChange={(e) => handleInputChange(e, "address")}
+          onChange={(e) => handleLiveValidation(e, "address")}
           placeholder="Address"
           className={`px-5 py-3 mt-1 border rounded-full ${getBorderClass("address")}`}
         />

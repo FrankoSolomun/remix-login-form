@@ -91,6 +91,7 @@ export default function Signup() {
   const [formData, setFormData] = useState({
     email: actionData?.fields?.email || "",
     password: actionData?.fields?.password || "",
+    confirmPassword: actionData?.fields?.confirmPassword || "",
     name: actionData?.fields?.name || "",
     surname: actionData?.fields?.surname || "",
     birthdate: actionData?.fields?.birthdate || "",
@@ -109,14 +110,14 @@ export default function Signup() {
     let { value } = event.target;
     const inputType = (event.nativeEvent as InputEvent).inputType;
 
-    // Normalize the input to only contain numbers and replace any misplaced dots
-    value = value.replace(/[^0-9.]/g, "").replace(/\.+/g, "");
+    // Normalize the input to only contain numbers
+    value = value.replace(/[^0-9]/g, "");
 
     // Format the string with dots in the correct places
-    if (value.length > 2 && value[2] !== ".") {
+    if (value.length >= 2) {
       value = value.slice(0, 2) + "." + value.slice(2);
     }
-    if (value.length > 5 && value[5] !== ".") {
+    if (value.length >= 5) {
       value = value.slice(0, 5) + "." + value.slice(5);
     }
 
@@ -128,7 +129,7 @@ export default function Signup() {
     // Handle deletion specifically, maintaining the position of dots
     if (inputType === "deleteContentBackward") {
       // Remove any trailing dots left over after deletion
-      value = value.replace(/(\.$)|(\.\.)/g, "");
+      value = value.replace(/\.$/, "").replace(/\.\./g, ".");
     }
 
     // Update form state
@@ -146,7 +147,7 @@ export default function Signup() {
           handleInputChange={handleInputChange}
           handleDateChange={handleDateChange}
         />
-        <div>
+        <div className="mt-3">
           {"Already have an account?"}{" "}
           <Link to="/login" className="text-blue-700">
             Login here

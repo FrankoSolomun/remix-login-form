@@ -7,16 +7,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  password  String
-  name      String
-  surname   String
-  address   String
-  birthdate String
+model User {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  email          String   @unique
+  password       String
+  name           String
+  surname        String
+  address        String
+  birthdate      String
   profilePicture String?
-
+  tokens         PasswordResetToken[]
 }
+
+model PasswordResetToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  userId    String   @unique  
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
