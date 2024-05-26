@@ -12,6 +12,7 @@ export interface User {
   address: string;
   birthdate: string;
   profilePicture: string;
+  type: string;
 }
 
 export interface LoaderData {

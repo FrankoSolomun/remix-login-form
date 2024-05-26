@@ -30,6 +30,7 @@ export const createUser = async (user: RegisterForm) => {
         surname: user.surname,
         birthdate: user.birthdate,
         address: user.address,
+        type: "classic",
       },
     });
     return { user: newUser };

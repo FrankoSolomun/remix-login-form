@@ -19,6 +19,8 @@ model User {
   birthdate      String
   profilePicture String?
   tokens         PasswordResetToken[]
+  type           String    @default("classic")
+
 }
 
 model PasswordResetToken {
