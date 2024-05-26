@@ -10,6 +10,7 @@ interface FormProps {
   pattern?: string;
   placeholder?: string;
   focusPlaceholder?: string;
+  error?: string;
 }
 
 export function Textfield({
@@ -22,36 +23,30 @@ export function Textfield({
   pattern,
   placeholder = label,
   focusPlaceholder,
+  error,
 }: FormProps) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(placeholder);
-  const [isValid, setIsValid] = useState(true); // Assume input is valid initially
 
   const handleFocus = () => {
     if (focusPlaceholder) {
-      setCurrentPlaceholder(focusPlaceholder); // Set focused placeholder if provided
+      setCurrentPlaceholder(focusPlaceholder);
     }
   };
 
   const handleBlur = () => {
     if (!value) {
-      setCurrentPlaceholder(placeholder); // Reset placeholder when not focused
-    }
-    if (pattern) {
-      setIsValid(new RegExp(pattern).test(value)); // Validate against the pattern
+      setCurrentPlaceholder(placeholder);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
-      onChange(e); // Call the passed onChange handler
-    }
-    if (pattern) {
-      setIsValid(new RegExp(pattern).test(e.target.value)); // Continuously validate input
+      onChange(e);
     }
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-[320px]">
       <input
         type={type}
         name={name}
@@ -62,13 +57,10 @@ export function Textfield({
         onBlur={handleBlur}
         pattern={pattern}
         placeholder={currentPlaceholder}
-        className={`px-5 py-3 mt-1 border rounded-full w-[320px] ${
-          isValid
-            ? "border-gray-300 active:border-blue-700"
-            : "border-red-500 text-red-500"
-        }`}
+        className={`px-5 py-3 mt-1 border rounded-full ${error ? "border-red-500" : "border-gray-300"}`}
         required
       />
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   );
 }
