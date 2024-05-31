@@ -7,6 +7,7 @@ import { User, LoaderData } from "./_index";
 import { PrismaClient } from "@prisma/client";
 import { PencilIcon, UploadIcon } from "~/icons/icons";
 import DashboardHeader from "~/components/DashboardHeader";
+import { redirect } from "@remix-run/node"; // Updated import
 
 const prisma = new PrismaClient();
 
@@ -15,19 +16,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     failureRedirect: "/login",
   });
 
-  if (!userId) {
-    throw new Response("Not Found", { status: 404 });
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+
+  if (!user || user.address === "Not given" || user.birthdate === "Not given") {
+    return redirect("/add-info");
   }
 
-  const userData = await prisma.user.findUnique({
-    where: { id: userId },
-  });
-
-  if (!userData) {
-    throw new Response("User Not Found", { status: 404 });
-  }
-
-  return json({ user: userData });
+  return json({ user });
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -159,12 +154,14 @@ export default function Dashboard() {
                         </p>
                         <p>{detail.value}</p>
                       </div>
-                      <button
-                        onClick={() => handleEdit(detail.field)}
-                        className="flex justify-center items-center p-2 rounded-full hover:bg-gray-300"
-                      >
-                        <PencilIcon className="w-4 h-4 hidden group-hover:block" />
-                      </button>
+                      {(user.type !== "google" || detail.field !== "email") && (
+                        <button
+                          onClick={() => handleEdit(detail.field)}
+                          className="flex justify-center items-center p-2 rounded-full hover:bg-gray-300"
+                        >
+                          <PencilIcon className="w-4 h-4 hidden group-hover:block" />
+                        </button>
+                      )}
                     </div>
                   </>
                 )}
@@ -172,12 +169,14 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-        <a
-          href="/change-password"
-          className="mt-5 bg-blue-700 text-white px-2 py-3 rounded-[30px] w-full max-w-[500px] flex justify-center items-center"
-        >
-          <p>Change password</p>
-        </a>
+        {user.type !== "google" && (
+          <a
+            href="/change-password"
+            className="mt-5 bg-blue-700 text-white px-2 py-3 rounded-[30px] w-full max-w-[500px] flex justify-center items-center"
+          >
+            <p>Change password</p>
+          </a>
+        )}
       </div>
     </Layout>
   );
