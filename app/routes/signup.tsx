@@ -12,6 +12,7 @@ import { createUser } from "./utils/user.server";
 import { authenticator } from "./utils/auth.server";
 import RegisterForm from "~/components/RegisterForm";
 import { ActionData } from "./login";
+import { handleInputChange, handleDateChange } from "./utils/formUtils";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await authenticator.isAuthenticated(request, {
@@ -98,54 +99,15 @@ export default function Signup() {
     address: actionData?.fields?.address || "",
   });
 
-  // Handle input change
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    field: string,
-  ) => {
-    setFormData((form) => ({ ...form, [field]: event.target.value }));
-  };
-
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let { value } = event.target;
-    const inputType = (event.nativeEvent as InputEvent).inputType;
-
-    // Normalize the input to only contain numbers
-    value = value.replace(/[^0-9]/g, "");
-
-    // Format the string with dots in the correct places
-    if (value.length >= 2) {
-      value = value.slice(0, 2) + "." + value.slice(2);
-    }
-    if (value.length >= 5) {
-      value = value.slice(0, 5) + "." + value.slice(5);
-    }
-
-    // Cut the value to the maximum length of 10 characters (DD.MM.YYYY)
-    if (value.length > 10) {
-      value = value.slice(0, 10);
-    }
-
-    // Handle deletion specifically, maintaining the position of dots
-    if (inputType === "deleteContentBackward") {
-      // Remove any trailing dots left over after deletion
-      value = value.replace(/\.$/, "").replace(/\.\./g, ".");
-    }
-
-    // Update form state
-    setFormData((prev) => ({
-      ...prev,
-      [event.target.name]: value,
-    }));
-  };
-
   return (
     <Layout>
       <div className="flex flex-col justify-center items-center h-screen">
         <RegisterForm
           formData={formData}
-          handleInputChange={handleInputChange}
-          handleDateChange={handleDateChange}
+          handleInputChange={(e, field) =>
+            handleInputChange(e, field, setFormData)
+          }
+          handleDateChange={(e) => handleDateChange(e, setFormData)}
         />
         <div className="mt-3">
           {"Already have an account?"}{" "}

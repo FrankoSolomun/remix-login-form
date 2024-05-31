@@ -1,3 +1,4 @@
+// add-info.tsx
 import React, { useState, useCallback } from "react";
 import {
   ActionFunction,
@@ -9,6 +10,7 @@ import { useActionData, Form } from "@remix-run/react";
 import debounce from "lodash.debounce";
 import { prisma } from "./utils/prisma.server";
 import { authenticator } from "./utils/auth.server";
+import { handleInputChange, handleDateChange } from "./utils/formUtils";
 
 interface ActionData {
   error?: string;
@@ -52,8 +54,10 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function AddInfo() {
   const actionData = useActionData<ActionData>();
-  const [address, setAddress] = useState("");
-  const [birthdate, setBirthdate] = useState("");
+  const [formData, setFormData] = useState({
+    address: "",
+    birthdate: "",
+  });
   const [birthdatePlaceholder, setBirthdatePlaceholder] =
     useState("Date of birth");
   const [errors, setErrors] = useState({
@@ -66,7 +70,7 @@ export default function AddInfo() {
   };
 
   const handleBirthdateBlur = () => {
-    if (!birthdate) {
+    if (!formData.birthdate) {
       setBirthdatePlaceholder("Date of birth");
     }
   };
@@ -121,13 +125,12 @@ export default function AddInfo() {
     e: React.ChangeEvent<HTMLInputElement>,
     field: string,
   ) => {
-    const { value } = e.target;
     if (field === "address") {
-      setAddress(value);
+      handleInputChange(e, field, setFormData);
     } else if (field === "birthdate") {
-      setBirthdate(value);
+      handleDateChange(e, setFormData); // Use handleDateChange for birthdate field
     }
-    debouncedValidateField(field, value);
+    debouncedValidateField(field, e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -142,15 +145,15 @@ export default function AddInfo() {
       birthdate: "",
     };
 
-    if (!address) {
+    if (!formData.address) {
       newErrors.address = "Address is required";
     }
 
-    if (!birthdate) {
+    if (!formData.birthdate) {
       newErrors.birthdate = "Date of birth is required";
-    } else if (!isValidDate(birthdate)) {
+    } else if (!isValidDate(formData.birthdate)) {
       newErrors.birthdate = "Invalid date format";
-    } else if (calculateAge(birthdate) < 12) {
+    } else if (calculateAge(formData.birthdate) < 12) {
       newErrors.birthdate = "User must be at least 12 years old";
     }
 
@@ -162,7 +165,7 @@ export default function AddInfo() {
   const getBorderClass = (field: string) => {
     if (errors[field as keyof typeof errors]) {
       return "border-red-500";
-    } else if (field === "address" ? address : birthdate) {
+    } else if (field === "address" ? formData.address : formData.birthdate) {
       return "border-green-500";
     } else {
       return "border-gray-300"; // Neutral border color
@@ -182,7 +185,7 @@ export default function AddInfo() {
           <input
             type="text"
             name="address"
-            value={address}
+            value={formData.address}
             onChange={(e) => handleLiveValidation(e, "address")}
             placeholder="Address"
             className={`px-5 py-3 mt-1 border rounded-full ${getBorderClass(
@@ -195,7 +198,7 @@ export default function AddInfo() {
           <input
             type="text"
             name="birthdate"
-            value={birthdate}
+            value={formData.birthdate}
             onChange={(e) => handleLiveValidation(e, "birthdate")}
             onFocus={handleBirthdateFocus}
             onBlur={handleBirthdateBlur}
